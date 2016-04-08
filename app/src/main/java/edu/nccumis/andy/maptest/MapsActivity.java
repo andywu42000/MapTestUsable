@@ -1,5 +1,6 @@
 package edu.nccumis.andy.maptest;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -49,6 +50,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng nccu = new LatLng(24.9877, 121.5756);
         LatLng myHome = new LatLng(25.0885, 121.6994);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(nccu, 13));
+
+        Cursor cursor = db.rawQuery(
+                "select * from marks", null);
+        while (cursor.moveToNext()) {
+            int markId = cursor.getInt(0);
+            String markName = cursor.getString(1);
+            String markInfo = cursor.getString(2);
+            float longit = cursor.getFloat(3);
+            float latit = cursor.getFloat(4);
+            LatLng markFromDb = new LatLng(longit, latit);
+
+            map.addMarker(new MarkerOptions()
+                    .title(markName)
+                    .snippet(markInfo)
+                    .position(markFromDb));
+        }
+        cursor.close();
 
         map.addMarker(new MarkerOptions()
                 .title("NCCU")

@@ -24,7 +24,8 @@ public class DBHelper extends SQLiteOpenHelper{
         String sqlMap = "create table marks(id INTEGER PRIMARY KEY AUTOINCREMENT, mark_name text, mark_info text, longit float, latit float)";
         db.execSQL(sqlMap);
 
-        String initMap = "insert into marks values('New Mark','Auto generated mark.', '25.0329640', '121.5654270')";
+        String initMap = "insert into marks values('0', 'New Mark','Auto generated mark.', '25" +
+                ".0329640', '121.5654270')";
         db.execSQL(initMap);
     }
 
