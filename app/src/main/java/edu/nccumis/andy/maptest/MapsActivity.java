@@ -1,5 +1,6 @@
 package edu.nccumis.andy.maptest;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -30,8 +31,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         new Thread(){
             public void run(){
                 db = DbHelper.getReadableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("mark_name", "Taipei Main Station");
+                values.put("mark_info", "TRA/THSR/MRT");
+                values.put("longit", "25.04775");
+                values.put("latit", "121.51706");
+                db.insertOrThrow("marks", null, values);
+
+                ContentValues values2 = new ContentValues();
+                values2.put("mark_name", "MRT Zhongxiao Fuxing");
+                values2.put("mark_info", "Station on MRT Line 5");
+                values2.put("longit", "25.04125");
+                values2.put("latit", "121.543713");
+                db.insertOrThrow("marks", null, values2);
             }
         }.start();
+        //String initMap3 = "insert into marks values(null, 'MRT Zhongxiao Fuxing', 'MRT Line 5',
+        // " +
+                //"'25.04125', '121.543713')";
         mapFragment.getMapAsync(this);
     }
 

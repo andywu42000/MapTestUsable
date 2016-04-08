@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper{
 
-    private static final String DB_NAME = "MapsDB.db";
+    private static final String DB_NAME = "mapsdb.db";
     private static final int DB_VERSION = 1;
 
     public DBHelper(Context context){
@@ -21,10 +21,11 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sqlMap = "create table marks(id INTEGER PRIMARY KEY AUTOINCREMENT, mark_name text, mark_info text, longit float, latit float)";
+        String sqlMap = "create table marks(id INTEGER PRIMARY KEY AUTOINCREMENT, mark_name text," +
+                " mark_info text, longit numeric, latit numeric)";
         db.execSQL(sqlMap);
 
-        String initMap = "insert into marks values('0', 'New Mark','Auto generated mark.', '25" +
+        String initMap = "insert into marks values(null, 'New Mark','Auto generated mark.', '25" +
                 ".0329640', '121.5654270')";
         db.execSQL(initMap);
     }
