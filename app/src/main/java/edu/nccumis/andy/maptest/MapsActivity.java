@@ -27,6 +27,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        //Intent i = new Intent();
+        //i.setClass(MapsActivity.this, DBConnector.class);
+        //startActivity(i);
         DbHelper = new DBHelper(this);
         new Thread(){
             public void run(){
@@ -49,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //String initMap3 = "insert into marks values(null, 'MRT Zhongxiao Fuxing', 'MRT Line 5',
         // " +
                 //"'25.04125', '121.543713')";
+        DBConnector.sync();
         mapFragment.getMapAsync(this);
     }
 
