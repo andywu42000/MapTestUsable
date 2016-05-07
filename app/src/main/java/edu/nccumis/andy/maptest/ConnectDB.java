@@ -12,32 +12,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Andy on 2016/5/6.
+ * Created by Andy on 2016/5/7.
  */
-public class DBConnector {
+public class ConnectDB{
 
-    public static final String MY_JSON ="MY_JSON";
+    public final String MY_JSON ="MY_JSON";
 
-    private static final String JSON_URL = "http://10.0.3.2:8000/mark_download/";
+    public final String URL = "http://10.0.3.2:8000/mark_download/";
 
-    public static void sync() {
-        getJSON(JSON_URL);
+    public void sync() {
+        getJSON(URL);
     }
 
-    private static void getJSON(String url) {
+    public static void getJSON(String url) {
         class GetJSON extends AsyncTask<String, Void, String> {
             String myJSONString;
-            final String JSON_ARRAY ="result";
-            final String CLOSE_AT = "close_at";
-            final String CONTENT = "content";
-            final String CREATED_AT = "created_at";
-            final String LATITUDE = "latitude";
-            final String LOCATION = "location";
-            final String LONGITUDE = "longitude";
-            final String OPEN_AT = "open_at";
-            final String TITLE = "title";
-            final String UPDATED_AT = "updated_at";
-            final String ZIP = "zip";
             JSONArray marks = null;
             @Override
             protected void onPreExecute() {
@@ -70,28 +59,40 @@ public class DBConnector {
                     //myJSONString = myJSONString.replace("]", "");
                     //myJSONString = myJSONString.replace("{", "");
                     //myJSONString = myJSONString.replace("}", "");
-                    System.out.println(myJSONString);
+                   // System.out.println(myJSONString);
                     extractJSON();
+                    System.out.print("DAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                     return null;
 
                 } catch (Exception e) {
                     return null;
                 }
             }
-            private void extractJSON() {
+            public void extractJSON() {
                 try {
-                    //JSONObject jsonObj = new JSONObject(myJSONString);
                     JSONArray jsonArr = new JSONArray(myJSONString);
-
                     try {
                         for (int i = 0; i < jsonArr.length(); i++) {
-                            JSONObject marks = jsonArr.getJSONObject(i);
-                            System.out.println(marks.getString(TITLE));
+                            JSONObject mark = jsonArr.getJSONObject(i);
+                            String CLOSE_AT = mark.getString("close_at");
+                            String CONTENT = mark.getString("content");
+                            String CREATED_AT = mark.getString("created_at");
+                            String LATITUDE = mark.getString("latitude");
+                            String LOCATION = mark.getString("location");
+                            String LONGITUDE = mark.getString("longitude");
+                            String OPEN_AT = mark.getString("open_at");
+                            String TITLE = mark.getString("title");
+                            String UPDATED_AT = mark.getString("updated_at");
+                            String ZIP = mark.getString("zip");
+
                         }
+
                     } catch (JSONException e) {
+                        System.out.print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         e.printStackTrace();
                     }
                 } catch (JSONException e) {
+                    System.out.print("CAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                     e.printStackTrace();
                 }
             }
@@ -99,4 +100,5 @@ public class DBConnector {
         GetJSON gj = new GetJSON();
         gj.execute(url);
     }
+
 }

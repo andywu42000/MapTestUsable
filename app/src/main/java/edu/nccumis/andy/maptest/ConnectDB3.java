@@ -1,91 +1,20 @@
 package edu.nccumis.andy.maptest;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 
-public class DBHelper extends SQLiteOpenHelper{
-    private static final String DB_NAME = "maps.sqlite";
-    public SQLiteDatabase db;
-    private static final int DB_VERSION = 1;
-    public DBHelper(Context context){
-        super(context, DB_NAME, null, DB_VERSION);
-    }
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    public DBHelper(Context context, String name, CursorFactory factory,
-                    int version) {
-        super(context, name, factory, version);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS MARKS");
-        String sqlMap = "create table marks(id INTEGER PRIMARY KEY AUTOINCREMENT, mark_name text," +
-                " mark_info text, latit numeric, longit numeric);";
-        db.execSQL(sqlMap);
-
-        String initMap = "insert into marks values(null, 'New Mark','Auto generated mark.', '25" +
-                ".0329640', '121.5654270');";
-        db.execSQL(initMap);
-
-        //String[][] syncEle = ConnectDB2.getJSON("http://10.0.3.2:8000/mark_download/");
-        //int l = syncEle.length;
-        //if (syncEle != null){
-            //db.execSQL("drop table if exists marks");
-            //String renew = "create table marks(id INTEGER PRIMARY KEY AUTOINCREMENT, mark_name " +
-            //        "text," +
-            //        " mark_info text, latit numeric, longit numeric)";
-         //   db.execSQL(renew);
-        //    for(int i = 0; i < syncEle.length; i++) {
-        //        insert(syncEle[i][0], syncEle[i][1], syncEle[i][2], syncEle[i][3]);
-        //    }
-       // }
-
-    }
-
-   /** public Cursor select()
-    {
-        String[] cols = {"id", "mark_name", "mark_info", "latit", "longit"};
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("marks", cols, null,
-            null, null,
-            null,
-            null);
-        return cursor;
-    }*/
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists marks");
-        onCreate(db);
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists marks");
-        onCreate(db);
-    }
-
-    public long insert(String name, String info, String lati, String longi)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("mark_name", name);
-        cv.put("mark_info", info);
-        cv.put("latit", lati);
-        cv.put("longit", longi);
-        long row = db.insert("marks", null, cv);
-        return row;
-    }
-}
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by Andy on 2016/5/7.
  */
-/**class ConnectDB2{
+public class ConnectDB3 {
     public final String MY_JSON ="MY_JSON";
 
     public final String URL = "http://10.0.3.2:8000/mark_download/";
@@ -143,7 +72,7 @@ public class DBHelper extends SQLiteOpenHelper{
             public String extractJSON() {
                 try {
                     JSONArray jsonArr = new JSONArray(myJSONString);
-
+                    System.out.print(jsonArr.length());
                     String[][] innresult = new String[jsonArr.length()][4];
                     try {
                         for (int i = 0; i < jsonArr.length(); i++) {
@@ -158,22 +87,21 @@ public class DBHelper extends SQLiteOpenHelper{
                             String TITLE = mark.getString("title");
                             String UPDATED_AT = mark.getString("updated_at");
                             String ZIP = mark.getString("zip");
+
+                            result[i][0] = TITLE;
+                            result[i][1] = CONTENT;
+                            result[i][2] = LATITUDE;
+                            result[i][3] = LONGITUDE;
+                        }
+                        /**for(int i = 0; i < jsonArr.length(); i++) {
                             for(int j = 0; j <= 3; j++) {
-                                if(j == 0){innresult[i][j] = TITLE;}
-                                if(j == 1){innresult[i][j] = CONTENT;}
-                                if(j == 2){innresult[i][j] = LATITUDE;}
-                                if(j == 3){innresult[i][j] = LONGITUDE;}
+                                if(j == 0){[i][j] = innresult[i][j];}
+                                if(j == 1){result[i][j] = innresult[i][j];}
+                                if(j == 2){result[i][j] = innresult[i][j];}
+                                if(j == 3){result[i][j] = innresult[i][j];}
                             }
-                        }
-                    for(int i = 0; i < jsonArr.length(); i++) {
-                        for(int j = 0; j <= 3; j++) {
-                            if(j == 0){result[i][j] = innresult[i][j];}
-                            if(j == 1){result[i][j] = innresult[i][j];}
-                            if(j == 2){result[i][j] = innresult[i][j];}
-                            if(j == 3){result[i][j] = innresult[i][j];}
-                        }
-                    }
-                    return null;
+                        }*/
+                        return null;
                     } catch (JSONException e) {
                         System.out.print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         e.printStackTrace();
@@ -188,8 +116,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
         GetJSON gj = new GetJSON();
         gj.execute(url);
+        System.out.print(gj.extractJSON());
         return gj.result;
     }
-
-}**/
-
+}
